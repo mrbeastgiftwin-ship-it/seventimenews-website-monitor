@@ -1,6 +1,3 @@
-# One monitored page URL per line.
-# Use a site's RSS/Atom feed URL if available; otherwise use its latest-posts/news/jobs listing page.
-# Optional: add | CSS_SELECTOR to focus on the part of the page containing post links.
-# Examples (replace these with real URLs):
-# https://example.com/news
-# https://example.org/careers | main .job-list
+https://www.bbc.com/news
+https://www.theguardian.com/international
+https://www.reuters.com/world/
