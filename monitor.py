@@ -31,20 +31,36 @@ def load_state():
             print("Warning: state.json could not be read; starting with empty state.")
     return {}
 
+
 def load_sites():
     sites = []
-    for raw in URLS_FILE.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
+
+    print(f"Current folder: {ROOT}")
+    print(f"Websites file: {URLS_FILE}")
+    print(f"File exists: {URLS_FILE.exists()}")
+
+    if not URLS_FILE.exists():
+        raise SystemExit("ERROR: websites.txt file not found.")
+
+    content = URLS_FILE.read_text(encoding="utf-8-sig")
+
+    for raw in content.splitlines():
+        line = raw.strip().lstrip("\ufeff\u200b").strip()
+
         if not line or line.startswith("#"):
             continue
-        # Format: URL | optional CSS selector
+
         parts = line.split("|", 1)
         url = parts[0].strip()
         selector = parts[1].strip() if len(parts) > 1 else ""
-        if url.startswith("http://") or url.startswith("https://"):
+
+        if url.lower().startswith(("http://", "https://")):
             sites.append((url, selector))
+            print(f"VALID URL: {url}")
         else:
-            print(f"Skipping invalid URL line: {line}")
+            print(f"INVALID URL: {repr(line)}")
+
+    print(f"Total valid websites: {len(sites)}")
     return sites
 
 def clean_url(url):
