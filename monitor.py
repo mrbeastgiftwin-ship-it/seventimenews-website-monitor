@@ -150,20 +150,26 @@ def send_telegram(token, chat_id, text):
         print(f"Telegram send failed: {exc}")
         return False
 
+
 def chunks_for_telegram(site_url, new_items):
-    header = f"🆕 New posts detected\\nSource: {site_url}\\n\\n"
-    messages, current = [], header
+    messages = []
+
     for link, title in new_items[:MAX_ALERTS_PER_SITE]:
-        piece = f"• {title}\\n{link}\\n\\n"
-        if len(current) + len(piece) > 3800:
-            messages.append(current.rstrip())
-            current = header
-        current += piece
-    if current.strip() != header.strip():
-        messages.append(current.rstrip())
-    remaining = len(new_items) - min(len(new_items), MAX_ALERTS_PER_SITE)
-    if remaining > 0 and messages:
-        messages[-1] += f"\\n…and {remaining} more new links were found on this page."
+        message = (
+            f"🆕 New Job Post\n"
+            f"Source: {site_url}\n\n"
+            f"📌 {title}\n\n"
+            f"🔗 Apply / View Job:\n{link}"
+        )
+        messages.append(message)
+
+    remaining = len(new_items) - min(
+        len(new_items), MAX_ALERTS_PER_SITE
+    )
+
+    if remaining > 0:
+        print(f"Skipped {remaining} additional links due to alert limit.")
+
     return messages
 
 def main():
